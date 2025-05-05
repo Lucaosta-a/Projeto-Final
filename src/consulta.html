@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .ambientes-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 10px
+        }
+
+        .ambiente-card {
+            width: 12rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-" style="background-color: #01b9ff;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/jplsys.jose/jplsys/index.html">
+                <img src="../imagens/logo.png" alt="Logo" width="110" height="50" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div style="background-color: #0087ba; padding: 10px 0 10px 0; color: white;">
+        <h1 style="text-align: center">Defina o Ambiente</h1>
+    </div>
+
+    <div class="ambientes-container">
+        <div class="card ambiente-card">
+            <img src="../imagens/quarto.png" class="card-img-top" alt="quarto">
+            <div class="card-body text-center">
+                <p class="card-text">Quarto</p>
+            </div>
+        </div>
+
+        <div class="card ambiente-card">
+            <img src="../imagens/sala.png" class="card-img-top" alt="sala">
+            <div class="card-body text-center">
+                <p class="card-text">Sala</p>
+            </div>
+        </div>
+
+        <div class="card ambiente-card">
+            <img src="../imagens/banheiro.png" class="card-img-top" alt="banheiro">
+            <div class="card-body text-center">
+                <p class="card-text">Banheiro</p>
+            </div>
+        </div>
+
+        <div class="card ambiente-card">
+            <img src="../imagens/cozinha.png" class="card-img-top" alt="cozinha">
+            <div class="card-body text-center">
+                <p class="card-text">Cozinha</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campo de selecao: Quantas pessoas moram na casa -->
+    <div class="container mt-4">
+        <div class="d-flex flex-column align-items-center">
+            <label for="numeroPessoas" class="form-label fw-bold">Quantas pessoas moram na casa?</label>
+            <select id="numeroPessoas" class="form-select w-50">
+                <option value="1">1 Pessoas</option>
+                <option value="2">2 Pessoas</option>
+                <option value="3">3 Pessoas</option>
+                <option value="4">4 Pessoas</option>
+                <option value="5">5 Pessoas</option>
+                <option value="10">6 ou mais Pessoas </option>
+            </select>
+        </div>
+    </div>
+
+    <br>
+    <div class="d-grid gap-2 col-9 mx-auto" style="background-color: #01b9ff; border-radius: 5px;">
+        <button class="btn" type="button" style="color: white;">Outro Ambiente</button>
+    </div>
+    <br>
+    <div class="d-grid gap-1 col-6 mx-auto" style="background-color: #01b9ff; border-radius: 5px;">
+        <button class="btn" type="button" style="color: white;" id="btnCalcular">Calcular</button>
+
+    </div>
+
+    <!-- Sobreposição da página de seleção de aparelhos -->
+    <div id="aparelhoOverlay" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+">
+        <div style="
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+    ">
+            <h4 id="nomeComodo">Sala</h4>
+
+            <!-- Carrossel simples de ícones -->
+            <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
+                <button onclick="mudarIcone(-1)" style="border: none; background: none; font-size: 20px;">←</button>
+                <img id="iconeAtual" src="../imagens/tv.png" style="width: 51px; height: 40px; margin: 0 10px;"
+                    alt="icone">
+                <button onclick="mudarIcone(1)" style="border: none; background: none; font-size: 20px;">→</button>
+            </div>
+
+            <!-- Formulário -->
+            <input type="text" class="form-control mb-2" placeholder="Modelo do Aparelho">
+            <input type="number" class="form-control mb-2" placeholder="Tempo Médio (horas)">
+            <input type="number" class="form-control mb-2" placeholder="Potência do aparelho">
+
+            <button class="btn btn-light -sm mb-2" style="width: 80px;" onclick="fecharOverlay()">Voltar</button>
+            <button class="btn btn-primary w-100" onclick="fecharOverlay()">Salvar</button>
+
+        </div>
+    </div>
+
+    <script>
+        const icones = [
+            '../imagens/tv.png',
+            '../imagens/videogame.png',
+            '../imagens/arcondicionado.png'
+        ];
+
+        let indiceIcone = 0;
+
+        function abrirOverlay(comodo) {
+            document.getElementById('aparelhoOverlay').style.display = 'flex';
+            document.getElementById('nomeComodo').textContent = comodo;
+        }
+
+        function fecharOverlay() {
+            document.getElementById('aparelhoOverlay').style.display = 'none';
+        }
+
+        function mudarIcone(direcao) {
+            indiceIcone = (indiceIcone + direcao + icones.length) % icones.length;
+            document.getElementById('iconeAtual').src = icones[indiceIcone];
+        }
+
+        document.querySelectorAll('.ambiente-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const nome = card.querySelector('.card-text').textContent;
+                abrirOverlay(nome);
+            });
+        });
+
+        const calcularBtn = document.querySelector('#btnCalcular'); // Adicione id="btnCalcular" ao botão Calcular
+        const numeroPessoasSelect = document.querySelector('#numeroPessoas');
+
+        let comodosPreenchidos = {}; // Para armazenar se cada ambiente foi preenchido
+
+        document.querySelectorAll('.ambiente-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const nome = card.querySelector('.card-text').textContent;
+                abrirOverlay(nome);
+            });
+        });
+
+        function salvarComodo(comodo) {
+            comodosPreenchidos[comodo] = true;
+        }
+
+        function todosPreenchidos() {
+            return ['Sala', 'Quarto', 'Cozinha', 'Banheiro'].every(c => comodosPreenchidos[c]);
+        }
+
+        document.querySelector('.btn.btn-primary.w-100').addEventListener('click', function () {
+            const comodo = document.getElementById('nomeComodo').textContent;
+            salvarComodo(comodo);
+            fecharOverlay();
+        });
+
+        calcularBtn.addEventListener('click', () => {
+            if (!todosPreenchidos()) {
+                alert('Por favor, preencha todos os cômodos antes de calcular.');
+                return;
+            }
+
+            const numeroPessoas = numeroPessoasSelect.value;
+
+            // Redireciona para resultado.html com os dados via query string
+            window.location.href = `resultado.html?pessoas=${numeroPessoas}`;
+        });
+
+
+    </script>
+
+</body>
+
+</html>
