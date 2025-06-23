@@ -1,0 +1,677 @@
+.titulo {
+    font-size: 1.5rem;
+    font-weight: bolder;
+    text-align: center;
+}
+
+/* Fundo da página com degradê azul */
+body {
+    background: linear-gradient(180deg, #007AFF 0%, #5EC6F5 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 80px; /* Ajuste conforme o tamanho do botão */
+}
+
+/* Cores de fundo personalizadas */
+.bg-sala { background-color: #007bff; }
+.bg-cozinha { background-color: #28a745; }
+.bg-quarto { background-color: #6f42c1; }
+.bg-banheiro { background-color: #ffc107; }
+.bg-lavanderia { background-color: #dc3545; }
+.bg-escritorio { background-color: #c26904; }
+.bg-custom-room { background-color: #0d6fc5; }
+
+/* Cards de cômodo com fundo branco, bordas arredondadas e sombra leve */
+.room-card {
+    background-color: white;
+    border: black;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 100%;
+    max-width: 400px;
+    flex: 1 1 100%;
+    margin-bottom: 20px;
+    padding: 3px;
+}
+
+/* Estilo para os ícones de cômodo (SVG no header do card) */
+.room-card .room-icon {
+    width: 15rem;
+    height: 100%;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.room-card .card-header {
+    padding: 1rem 1.25rem;
+    display: flexbox;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.room-card .card-body {
+    padding: 1rem 1.25rem;
+}
+
+/* Container responsivo */
+.room-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(218, 218, 218, 0.8), rgba(218, 218, 218, 0.8));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Altere o .overlay-content para ser mais um wrapper simples. */
+.overlay-content {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* O modal-dialog já está bem configurado, mas vamos reforçar a não-compressão */
+.modal-dialog {
+    max-width: 800px;
+    width: 95%;
+    margin: 1rem auto;
+    flex-shrink: 0;
+}
+
+/* Ajuste o modal-content para controlar a altura máxima e o overflow geral do modal */
+.modal-content {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+/* O modal-body é onde o conteúdo rolável deve estar */
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Eletrodomésticos Cards - O ponto principal para o layout em colunas */
+.appliance-card {
+    position: relative;
+    width: 120px;
+    height: 146px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Estilo para os ícones de eletrodomésticos (SVG no corpo do card) */
+.appliance-img-icon {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 0.3rem;
+}
+
+/* Estilos para o grid de eletrodomésticos dentro do modal */
+.appliance-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px; /* MANTIDO: Aumentado o espaçamento entre os cards de eletrodomésticos */
+}
+
+/* Para o ícone de check */
+.appliance-card .check-icon {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1rem;
+    font-size: 0.9rem;
+    display: none;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.appliance-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appliance-card.selected {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.appliance-card.selected .appliance-img-icon {
+    filter: brightness(0) saturate(100%) invert(20%) sepia(70%) saturate(2000%) hue-rotate(200deg) brightness(90%) contrast(100%);
+}
+
+.appliance-card.selected .check-icon {
+    display: block;
+}
+
+.selected-appliances-section {
+    margin-top: 1.5rem;
+}
+
+.selected-appliances-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Estilos para o contador de quantidade */
+.appliance-quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+.appliance-quantity-controls button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    padding: 0 8px;
+    cursor: pointer;
+    color: #007bff;
+    transition: color 0.2s;
+}
+
+.appliance-quantity-controls button:hover {
+    color: #0056b3;
+}
+
+.appliance-quantity-controls span {
+    font-weight: bold;
+    font-size: 1rem;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* Esconder o contador quando o card não está selecionado */
+.appliance-card:not(.selected) .appliance-quantity-controls {
+    display: none;
+}
+
+/* Ajustes para o layout do card quando o contador está visível */
+.appliance-card.selected {
+    padding-bottom: 0.2rem;
+}
+
+/* Estilos para o botão de deletar eletrodomésticos customizados */
+.delete-appliance-btn {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 0.1rem;
+    font-size: 0.9rem;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    z-index: 2;
+    line-height: 1;
+}
+
+.delete-appliance-btn:hover {
+    background-color: #c82333;
+}
+
+/* Estilos para o botão "Adicionar Outro Eletrodoméstico" */
+#addCustomApplianceBtn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addCustomApplianceBtn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para o novo botão flutuante FAB (Floating Action Button) */
+.fab-add-room {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.fab-add-room:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header,
+.modal-footer {
+    padding: 0.75rem 1rem;
+    gap: 15px;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 576px) {
+    .titulo {
+        font-size: 1.25rem;
+    }
+
+    .room-card {
+        width: 100%;
+    }
+
+    .appliance-card {
+        width: 120px;
+        height: 146px;
+        font-size: 0.75rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .modal-header,
+    .modal-footer {
+        padding: 0.75rem 1rem;
+        gap: 15px;
+    }
+
+    /* Ajuste para o botão FAB em telas menores */
+    .fab-add-room {
+        font-size: 0.9rem;
+        padding: 12px 20px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+/* Estilos para o ícone de relógio nos cards de eletrodomésticos */
+.appliance-card .daily-usage-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.7rem;
+    color: #007bff;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 2px;
+    line-height: 1;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.appliance-card.selected .daily-usage-icon {
+    opacity: 1;
+}
+
+.appliance-card .daily-usage-icon:hover {
+    color: #0056b3;
+    transform: scale(1.1);
+}
+
+/* Estilos para o novo overlay de uso diário */
+#dailyUsageOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#dailyUsageOverlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Garante que o input de número não tenha setas giratórias (opcional) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.bg-gradient-blue {
+    background: linear-gradient(to bottom right, #007bff, #0056b3);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.container {
+    flex-grow: 1;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Estilos para o grupo de botões com larguras personalizadas */
+.button-group-custom-width {
+    display: flex; /* Garante que é um contêiner flexível */
+    justify-content: center; /* Centraliza os botões */
+    gap: 20px; /* Aumenta o espaçamento entre os botões */
+    /* Remove a regra .btn de dentro para aplicar ao contêiner */
+}
+
+.button-group-custom-width .btn {
+    flex-grow: 1;
+    min-width: 180px;
+    white-space: nowrap;
+    border-radius: 25px; /* Adiciona border-radius de 25px */
+}
+
+/* Para telas menores (até 767.98px), permita que os botões ocupem 100% da largura */
+@media (max-width: 767.98px) {
+    .button-group-custom-width {
+        flex-direction: column; /* Empilha os botões em telas pequenas */
+        gap: 10px; /* Ajusta o espaçamento quando empilhados */
+    }
+
+    .button-group-custom-width .btn {
+        width: 100%;
+        flex-grow: 0;
+    }
+
+    /* Opcional: ajustar margens ou padding em telas pequenas para evitar cortes */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Ajustar o tamanho da fonte do h1 em telas pequenas se necessário */
+    h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 575.98px) { /* Para telas muito pequenas (celulares) */
+    h1 {
+        font-size: 1.5rem;
+    }
+    .card {
+        padding: 1rem !important;
+    }
+    .btn-lg {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* NOVO/REFORÇADO: Estilos para o card-body que contém o relatório/resposta */
+#summaryTableContainer {
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Regras para os parágrafos dentro do summaryTableContainer (resposta do Gemini) */
+#summaryTableContainer p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+.summary-cards-mobile {
+    margin-top: 20px;
+}
+
+.summary-cards-mobile .card {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.summary-cards-mobile .card-header {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+}
+
+.summary-cards-mobile .list-group-item {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* NOVO: Estilos para o container da resposta do Gemini */
+.gemini-response-container {
+    max-width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    padding: 1.5rem;
+}
+
+/* Garante que o texto dentro do card-body se adapte bem */
+#summaryTableContainer p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+/* --- */
+/* Estilos para os botões "Obter Relatório" e "Limpar Dados" */
+.fixed-buttons-container {
+    position:relative; /* Fixa a posição na tela */
+    bottom: 20px; /* Distância do fundo */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajusta para centralizar perfeitamente */
+    display: flex; /* Usa Flexbox para os botões */
+    gap: 20px; /* Aumenta o espaçamento entre os botões */
+    z-index: 999; /* Garante que os botões fiquem acima de outros elementos */
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+    justify-content: center; /* Centraliza os botões quando quebram a linha */
+}
+
+.fixed-buttons-container .btn {
+    min-width: 180px; /* Garante uma largura mínima para os botões */
+    padding: 10px 20px; /* Ajusta o padding para um visual melhor */
+    font-size: 1.1rem; /* Aumenta o tamanho da fonte */
+    border-radius: 50px; /* Mantém o estilo de botões arredondados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra para destaque */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Transição para hover */
+}
+
+/* --- Estilos para o Botão Voltar ao Início --- */
+
+/* Estilo para TELAS GRANDES (Desktop): Fixo no canto */
+.back-to-start-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1050;
+}
+
+#backToStartBtn {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para TELAS PEQUENAS (Mobile): Centralizado e acompanha a rolagem */
+@media (max-width: 768px) {
+    .back-to-start-container {
+        position: static; /* Deixa de ser fixo */
+        display: flex;
+        justify-content: center; /* Centraliza o botão */
+        width: 100%;
+        margin-top: 2rem; /* Adiciona um espaço acima dele */
+        padding-bottom: 1rem;
+    }
+
+    #backToStartBtn {
+        width: 90%;
+        max-width: 300px;
+        justify-content: center; /* Centraliza o texto e ícone dentro do botão */
+    }
+}
+
+#voltar, 
+  #voltar:hover{
+    text-decoration: none;
+    color: black;
+.daily-usage-option.active {
+    background-color: #007bff; /* Azul primário do Bootstrap */
+    color: white; /* Texto branco para contraste */
+    border-color: #007bff; /* Borda azul */
+}
+
+/* Garante que os botões voltem ao normal quando não ativos */
+.daily-usage-option:not(.active) {
+    background-color: transparent;
+    color: #007bff;
+    border-color: #007bff;
+}
+
+
+  }
+
+.fixed-bottom-left-button:hover {
+    background-color: #e2e6ea; /* Um pouco mais escuro ao passar o mouse */
+    border-color: #dae0e5;}
+
+/* Media Query para telas menores */
+@media (max-width: 768px) {
+    .fixed-buttons-container {
+        flex-direction: column; /* Empilha os botões em telas menores */
+        gap: 15px; /* Ajusta o espaçamento quando empilhados */
+        bottom: 15px; /* Ajusta a posição inferior */
+    }
+
+    .fixed-buttons-container .btn {
+        width: 90%; /* Ocupa mais largura em telas menores */
+        max-width: 300px; /* Limita a largura máxima para não ficarem muito grandes */
+        margin: 0 auto; /* Centraliza os botões empilhados */
+    }
+}
+
+/* Aumente o font-size para o iPhone se o texto do Gemini estiver muito pequeno */
+@media (max-width: 575.98px) {
+    .gemini-response-container p {
+        font-size: 0.95rem;
+    }
+}
+
+/* ====================================================== */
+/* ===== ESTILOS PARA CHAMADA DE AÇÃO PRINCIPAL (Dourado) ===== */
+/* ====================================================== */
+
+/* Container que envolve o botão para dar um fundo sutil e espaçamento */
+.premium-cta-container {
+  padding: 1.5rem 1rem;
+  background: rgba(0, 0, 0, 0.15); /* Fundo semi-transparente para se destacar do gradiente */
+  border-radius: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Botão de Obter Dicas (Dourado e Pulsante) */
+#economizeBtn {
+  background: linear-gradient(45deg, #ffd700, #ffc107); /* Gradiente Dourado/Amarelo Vibrante */
+  color: #493803; /* Cor de texto escura para alto contraste */
+  font-weight: 700; /* Fonte em negrito */
+  font-family: 'Poppins', sans-serif; /* Usa uma fonte de mais impacto se disponível */
+  border: none;
+  padding: 15px 35px; /* Mais preenchimento para um botão maior */
+  border-radius: 50px; /* Bordas totalmente arredondadas */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25); /* Sombra forte para efeito "flutuante" */
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase; /* Texto em maiúsculas */
+  
+  /* Animação de "pulso" para chamar a atenção */
+  animation: pulse-animation 2s infinite;
+}
+
+/* Efeito ao passar o mouse sobre o botão */
+#economizeBtn:hover {
+  transform: scale(1.05) translateY(-3px); /* Aumenta e levanta um pouco */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+  animation-play-state: paused; /* Pausa a animação de pulso no hover */
+}
+
+/* Ícone de lâmpada dentro do botão */
+#economizeBtn .bi-lightbulb-fill {
+  margin-right: 8px;
+  vertical-align: text-bottom;
+}
+
+/* Animação de pulso para a sombra do botão */
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 5px 20px 0 rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 5px 30px 0 rgba(255, 215, 0, 0.9);
+  }
+  100% {
+    box-shadow: 0 5px 20px 0 rgba(255, 215, 0, 0.5);
+  }
+}
