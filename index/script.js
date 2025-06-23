@@ -35,15 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const valorTexto = document.getElementById('valorSelecionado');
         const mensagemFaixa = document.getElementById('mensagemFaixa');
 
-        function atualizarMensagem(valor) {
-            if (valor <= 100) return "Entre R$ 0 e R$ 100";
-            if (valor <= 300) return "Entre R$ 100 e R$ 300";
-            if (valor <= 500) return "Entre R$ 300 e R$ 500";
-            if (valor <= 800) return "Entre R$ 500 e R$ 800";
-            if (valor <= 1200) return "Entre R$ 800 e R$ 1.200";
-            return "Superior a R$ 1.200";
-        }
-
         function atualizarSimulador() {
             const valor = parseInt(rangeInput.value, 10);
             valorTexto.textContent = `R$ ${valor.toFixed(2).replace('.', ',')}`;
