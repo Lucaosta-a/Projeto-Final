@@ -2,10 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiPromptPreviewElement = document.getElementById('aiPromptPreview');
     const copyPromptBtn = document.getElementById('copyPromptBtn');
     const getReportBtn = document.getElementById('getReportBtn');
-    const clearDataBtn = document.getElementById('clearDataBtn'); // NOVO: Referência para o botão "Limpar Dados"
+    const clearDataBtn = document.getElementById('clearDataBtn'); // Referência para o botão "Limpar Dados"
     
-    // Mantenha seu objeto roomAppliancesData original com os dados padrão
-    // Ele será usado como base para recarregar os dados padrão após a limpeza.
+
     const initialRoomAppliancesData = {
         'Sala': [
             { id: 'tv', name: 'TV', icon: 'assets/tv.svg', defaultQuantity: 1, dailyUsage: 5, custom: false },
@@ -13,35 +12,50 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'ar-condicionado', name: 'Ar Condicionado', icon: 'assets/snowflake.svg', defaultQuantity: 1, dailyUsage: 6, custom: false },
             { id: 'videogame', name: 'Videogame', icon: 'assets/controller.svg', defaultQuantity: 1, dailyUsage: 4, custom: false },
             { id: 'roteador-wifi', name: 'Roteador Wi-Fi', icon: 'assets/wifi.svg', defaultQuantity: 1, dailyUsage: 24, custom: false },
-            { id: 'lampada-sala', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 3, dailyUsage: 8, custom: false }
+            { id: 'lampada-sala', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 3, dailyUsage: 8, custom: false },
+            
+            { id: 'lampada-led-sala', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 3, dailyUsage: 8, custom: false },
+            { id: 'lampada-fluorescente-sala', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 3, dailyUsage: 8, custom: false }
         ],
         'Cozinha': [
             { id: 'microondas', name: 'Micro-ondas', icon: 'assets/microwave.svg', defaultQuantity: 1, dailyUsage: 0.5, custom: false },
             { id: 'cafeteira', name: 'Cafeteira', icon: 'assets/coffeemaker.svg', defaultQuantity: 1, dailyUsage: 0.3, custom: false },
             { id: 'forno-eletrico', name: 'Forno Elétrico', icon: 'assets/oven.svg', defaultQuantity: 1, dailyUsage: 1, custom: false },
-            { id: 'lampada-cozinha', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 2, dailyUsage: 6, custom: false },
             { id: 'sanduicheira', name: 'Sanduicheira', icon: 'assets/sandwich.svg', defaultQuantity: 1, dailyUsage: 0.2, custom: false },
             { id: 'liquidificador', name: 'Liquidificador', icon: 'assets/blender.svg', defaultQuantity: 1, dailyUsage: 0.2, custom: false },
             { id: 'geladeira', name: 'Geladeira', icon: 'assets/fridge.svg', defaultQuantity: 1, dailyUsage: 24, custom: false },
-            { id: 'exaustor', name: 'Exaustor', icon: 'assets/exhaust.svg', defaultQuantity: 1, dailyUsage: 0.5, custom: false }
+            { id: 'exaustor', name: 'Exaustor', icon: 'assets/exhaust.svg', defaultQuantity: 1, dailyUsage: 0.5, custom: false },
+            { id: 'lampada-cozinha', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 2, dailyUsage: 6, custom: false },
+            
+            { id: 'lampada-led-cozinha', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 2, dailyUsage: 6, custom: false },
+            { id: 'lampada-fluorescente-cozinha', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 2, dailyUsage: 6, custom: false }
         ],
         'Quarto': [
-            { id: 'lampada-quarto', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
             { id: 'ventilador-quarto', name: 'Ventilador', icon: 'assets/fan.svg', defaultQuantity: 1, dailyUsage: 7, custom: false },
             { id: 'tv-quarto', name: 'TV', icon: 'assets/tv.svg', defaultQuantity: 1, dailyUsage: 4, custom: false },
             { id: 'ar-condicionado-quarto', name: 'Ar Condicionado', icon: 'assets/snowflake.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
-            { id: 'abajur', name: 'Abajur', icon: 'assets/lamp.svg', defaultQuantity: 1, dailyUsage: 3, custom: false }
+            { id: 'abajur', name: 'Abajur', icon: 'assets/lamp.svg', defaultQuantity: 1, dailyUsage: 3, custom: false },
+            { id: 'lampada-quarto', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
+            
+            { id: 'lampada-led-quarto', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
+            { id: 'lampada-fluorescente-quarto', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false }
         ],
         'Banheiro': [
             { id: 'secador-cabelo', name: 'Secador de Cabelo', icon: 'assets/hairdryer.svg', defaultQuantity: 1, dailyUsage: 0.2, custom: false },
             { id: 'chuveiro-eletrico', name: 'Chuveiro Elétrico', icon: 'assets/shower.svg', defaultQuantity: 1, dailyUsage: 1, custom: false },
             { id: 'chapinha', name: 'Chapinha', icon: 'assets/straightener.svg', defaultQuantity: 1, dailyUsage: 0.2, custom: false },
-            { id: 'lampada-banheiro', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 2, custom: false }
+            { id: 'lampada-banheiro', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 2, custom: false },
+            
+            { id: 'lampada-led-banheiro', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 2, custom: false },
+            { id: 'lampada-fluorescente-banheiro', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 2, custom: false }
         ],
         'Lavanderia': [
             { id: 'maquina-lavar', name: 'Máquina de Lavar', icon: 'assets/washing-machine.svg', defaultQuantity: 1, dailyUsage: 1.5, custom: false },
             { id: 'ferro-passar', name: 'Ferro de Passar', icon: 'assets/iron.svg', defaultQuantity: 1, dailyUsage: 0.5, custom: false },
-            { id: 'lampada-lavanderia', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 3, custom: false }
+            { id: 'lampada-lavanderia', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 3, custom: false },
+             
+            { id: 'lampada-led-lavanderia', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 3, custom: false },
+            { id: 'lampada-fluorescente-lavanderia', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 3, custom: false }
         ],
         'Escritório': [
             { id: 'ventilador-escritorio', name: 'Ventilador', icon: 'assets/fan.svg', defaultQuantity: 1, dailyUsage: 7, custom: false },
@@ -50,11 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'monitor', name: 'Monitor', icon: 'assets/monitor.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
             { id: 'impressora', name: 'Impressora', icon: 'assets/printer.svg', defaultQuantity: 1, dailyUsage: 0.1, custom: false },
             { id: 'ar-condicionado-escritorio', name: 'Ar Condicionado', icon: 'assets/snowflake.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
-            { id: 'lampada-escritorio', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false }
+            { id: 'lampada-escritorio', name: 'Lâmpada', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
+             
+            { id: 'lampada-led-escritorio', name: 'Lâmpada Led', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false },
+            { id: 'lampada-fluorescente-escritorio', name: 'Lâmpada Fluorescente', icon: 'assets/lightbulb.svg', defaultQuantity: 1, dailyUsage: 8, custom: false }
         ]
     };
     
-    // Use uma cópia para a variável mutável
+    
     let roomAppliancesData = JSON.parse(JSON.stringify(initialRoomAppliancesData));
 
     let selectedAppliancesByRoom = {};
@@ -518,23 +535,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+  // Cria e seleciona o eletrodomestico personalizado
     window.addCustomAppliance = function() {
         const applianceGrid = roomOverlay.querySelector('.appliance-grid');
 
         const name = prompt("Nome do novo eletrodoméstico:");
         if (!name || name.trim() === '') return;
 
-        // --- INÍCIO DA ALTERAÇÃO ---
-
         let dailyUsageInput = prompt(`Quantas horas por dia o(a) "${name}" é usado(a)? (Deixe em branco para o padrão de 1 hora)`);
         let dailyUsage = parseFloat(dailyUsageInput);
 
-        // Se a entrada for vazia, cancelada, inválida ou negativa, define o padrão como 1 hora.
         if (!dailyUsageInput || isNaN(dailyUsage) || dailyUsage < 0) {
             dailyUsage = 1;
         }
-
-        // --- FIM DA ALTERAÇÃO ---
 
         let quantityInput = prompt(`Quantas unidades de "${name}" você possui? (Padrão: 1)`);
         let quantity = parseInt(quantityInput);
@@ -564,18 +577,18 @@ document.addEventListener('DOMContentLoaded', () => {
             roomAppliancesData[currentRoomKey].push(newAppliance);
         }
 
+        // --- INÍCIO DA ALTERAÇÃO ---
+        // Adiciona diretamente o novo eletrodoméstico à lista de selecionados
+        addApplianceToSelection(newAppliance);
+
+        // Agora, ao renderizar o grid, o novo item já aparecerá como selecionado,
+        // pois a função populateApplianceGrid verifica a lista de selecionados.
         populateApplianceGrid(applianceGrid, currentRoomKey);
         
-        // Simula um clique para selecionar o novo item
-        const newCardInGrid = applianceGrid.querySelector(`[data-appliance-id="${newAppliance.id}"]`);
-        if (newCardInGrid) {
-            handleApplianceCardClick.call(newCardInGrid, new Event('click'));
-        }
-
         localStorage.setItem('customRoomAppliancesData', JSON.stringify(getCustomRoomsData()));
     };
 
-    // ===== FUNÇÃO MODIFICADA =====
+   
     window.openDailyUsageModal = function(applianceId, applianceName, currentUsage) {
         currentApplianceForDailyUsage = { id: applianceId, name: applianceName, currentUsage: parseFloat(currentUsage) };
 
@@ -632,7 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
     };
 
-    // ===== FUNÇÃO MODIFICADA =====
     window.saveDailyUsage = function() {
         // Encontra o botão que está ativo
         const activeButton = dailyUsageOverlay.querySelector('.daily-usage-option.active');
@@ -658,26 +670,58 @@ document.addEventListener('DOMContentLoaded', () => {
         // Não reativar o overflow do body aqui, pois o overlay principal ainda pode estar aberto
     };
 
-    window.saveAppliances = function() {
-        localStorage.setItem('selectedAppliancesByRoom', JSON.stringify(selectedAppliancesByRoom));
-        updateAiPromptPreview();
-        closeOverlay();
-    };
-
     window.closeOverlay = function() {
+        // Salva os dados no localStorage sempre que o modal é fechado
+        localStorage.setItem('selectedAppliancesByRoom', JSON.stringify(selectedAppliancesByRoom));
+        localStorage.setItem('customRoomAppliancesData', JSON.stringify(getCustomRoomsData()));
+
         roomOverlay.classList.remove('show');
         document.body.style.overflow = 'auto';
         updateAiPromptPreview();
     };
 
+   // Substitua o seu addEventListener existente por este
     addRoomBtn.addEventListener('click', () => {
         const roomName = prompt("Qual o nome do novo cômodo?");
         if (roomName && roomName.trim() !== '') {
             const newRoomKey = `custom-${Date.now()}`;
+
+            // --- INÍCIO DA ALTERAÇÃO ---
+            // Cria uma lista de lâmpadas padrão para o novo cômodo
+            const defaultLamps = [
+                {
+                    id: `lampada-generica-${newRoomKey}`, // ID único para a lâmpada neste cômodo
+                    name: 'Lâmpada',
+                    icon: 'assets/lightbulb.svg',
+                    defaultQuantity: 1,
+                    dailyUsage: 4, // Um valor padrão de 4 horas
+                    custom: false
+                },
+                {
+                    id: `lampada-led-${newRoomKey}`,
+                    name: 'Lâmpada Led',
+                    icon: 'assets/lightbulb.svg',
+                    defaultQuantity: 1,
+                    dailyUsage: 4,
+                    custom: false
+                },
+                {
+                    id: `lampada-fluorescente-${newRoomKey}`,
+                    name: 'Lâmpada Fluorescente',
+                    icon: 'assets/lightbulb.svg',
+                    defaultQuantity: 1,
+                    dailyUsage: 4,
+                    custom: false
+                }
+            ];
+
+            // Atribui o novo cômodo com as lâmpadas padrão
             roomAppliancesData[newRoomKey] = {
                 displayName: roomName,
-                appliances: []
+                appliances: defaultLamps // A lista de aparelhos não está mais vazia
             };
+            // --- FIM DA ALTERAÇÃO ---
+            
             localStorage.setItem('customRoomAppliancesData', JSON.stringify(getCustomRoomsData()));
             renderRoomCards();
         }
@@ -720,7 +764,8 @@ function confirmarvolta() {
 
     // Se o usuário clicar em "OK", ele será redirecionado.
     if (querVoltar) {
-        window.location.href = '../index.html'; 
+        // ATENÇÃO: Ajuste o caminho para 'index.html' se necessário, dependendo da sua estrutura de pastas.
+        window.location.href = '../Perguntas/01Pergunta.html'; 
     }
     // Se o usuário clicar em "Cancelar", nada acontece.
 };

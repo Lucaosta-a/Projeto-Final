@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_KEY = 'AIzaSyBBRHEdl_dJP6DlPHni1jTNI4NkfGQ368s'; // Sua chave real da API
     const summaryTableContainer = document.getElementById('summaryTableContainer');
-    const economizeBtn = document.getElementById('economizeBtn'); // Voltamos a usar o ID original
+    const economizeBtn = document.getElementById('economizeBtn');
+    // --- INÍCIO DA ALTERAÇÃO ---
+    const reiniciarBtn = document.getElementById('reiniciarBtn'); // Pega a referência do novo botão
 
-    // --- COLETA DE DADOS COMPLETA ---
+    // --- COLETA DE DADOS --- (sem alterações)
     const storedSelectedAppliances = localStorage.getItem('selectedAppliancesByRoom');
     const selectedAppliancesByRoom = storedSelectedAppliances ? JSON.parse(storedSelectedAppliances) : {};
-
     const storedCustomRooms = localStorage.getItem('customRoomAppliancesData');
     const customRoomAppliancesData = storedCustomRooms ? JSON.parse(storedCustomRooms) : {};
-
     const pergunta1 = localStorage.getItem('pergunta1');
     const pergunta2 = localStorage.getItem('pergunta2');
     const pergunta3 = localStorage.getItem('pergunta3');
@@ -17,7 +17,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const pergunta5 = localStorage.getItem('pergunta5');
     const pergunta6 = localStorage.getItem('pergunta6');
 
-    // Função para gerar o prompt para o Gemini
+    // --- NOVA FUNÇÃO PARA REINICIAR TUDO ---
+    function reiniciarSimulacaoCompleta() {
+        if (confirm("Tem certeza de que deseja reiniciar a simulação? Todos os seus dados preenchidos serão permanentemente apagados.")) {
+            // Limpa todas as chaves do localStorage usadas no projeto
+            localStorage.removeItem('selectedAppliancesByRoom');
+            localStorage.removeItem('customRoomAppliancesData');
+            localStorage.removeItem('pergunta1');
+            localStorage.removeItem('pergunta2');
+            localStorage.removeItem('pergunta3');
+            localStorage.removeItem('pergunta4');
+            localStorage.removeItem('pergunta5');
+            localStorage.removeItem('pergunta6');
+            localStorage.removeItem('dicasGeradas');
+            localStorage.removeItem('ultimoRelatorio');
+            
+            // Redireciona para a página inicial
+            alert("Simulação reiniciada com sucesso!");
+            window.location.href = '../index.html';
+        }
+    }
+
+    // Função para transformar o botão (sem alterações)
+    function transformarBotaoParaPremium() {
+        const btn = document.getElementById('economizeBtn');
+        if (btn) {
+            btn.innerHTML = '<i class="bi bi-star-fill me-2"></i> Tornar-se Premium';
+            btn.onclick = function() {
+                window.location.href = '../index/premium.html';
+            };
+            btn.disabled = false;
+        }
+    }
+    
+    // Função para mostrar os botões pós-consulta
+    function mostrarBotoesPosConsulta() {
+        if(reiniciarBtn) {
+            reiniciarBtn.style.display = 'inline-block';
+        }
+    }
+    // --- FIM DAS NOVAS FUNÇÕES ---
+
+    // Função para gerar o prompt (sem alterações)
     function generateGeminiPrompt() {
         let promptParts = [];
         promptParts.push("Com base no perfil do cliente e na lista de eletrodomésticos abaixo, forneça um relatório completo sobre como economizar energia. A resposta deve ser amigável, clara e bem estruturada.");
@@ -68,8 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         return promptParts.join('\n');
     }
-
-    // Função para exibir a tabela de resumo
+    
+    // Função para exibir a tabela de resumo (sem alterações)
     function displaySummaryTable() {
         let tableHtml = '<div class="table-responsive d-none d-md-block">';
         tableHtml += '<table class="table table-striped table-hover">';
@@ -143,13 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Função para consultar a API do Gemini
+    // Função para consultar a API (com a lógica de mostrar o novo botão)
     async function getEconomyTips() {
         const prompt = generateGeminiPrompt();
-        console.log("--- PROMPT COMPLETO ENVIADO PARA A IA ---");
-        console.log(prompt);
-        console.log("-----------------------------------------");
-
+        
         summaryTableContainer.innerHTML = `
             <div class="text-center">
                 <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
@@ -157,6 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <p class="mt-3 text-secondary">Analisando seus dados e gerando dicas personalizadas... Isso pode levar alguns segundos.</p>
             </div>`;
+        
+        economizeBtn.disabled = true;
 
         try {
             const response = await fetch(
@@ -181,17 +221,42 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedHtml = marked.parse(resultado);
             summaryTableContainer.innerHTML = `<div class="gemini-response-container p-3">${formattedHtml}</div>`; 
 
+            localStorage.setItem('dicasGeradas', 'true');
+            localStorage.setItem('ultimoRelatorio', formattedHtml);
+            
+            transformarBotaoParaPremium();
+            // --- MOSTRA O BOTÃO DE REINICIAR ---
+            mostrarBotoesPosConsulta();
+
         } catch (error) {
             summaryTableContainer.innerHTML = "<div class='alert alert-danger'>Erro ao consultar a API. Verifique sua chave de API ou conexão com a internet.</div>";
             console.error("Erro na consulta Gemini API:", error);
+            economizeBtn.disabled = false;
         }
     }
 
-    // Exibe a tabela de resumo inicial
-    displaySummaryTable();
+    // --- LÓGICA PRINCIPAL MODIFICADA ---
+    const dicasJaGeradas = localStorage.getItem('dicasGeradas') === 'true';
+
+    if (dicasJaGeradas) {
+        const relatorioSalvo = localStorage.getItem('ultimoRelatorio');
+        if (relatorioSalvo) {
+            summaryTableContainer.innerHTML = `<div class="gemini-response-container p-3">${relatorioSalvo}</div>`;
+        } else {
+            displaySummaryTable();
+        }
+        transformarBotaoParaPremium();
+        // --- MOSTRA O BOTÃO DE REINICIAR AO RECARREGAR A PÁGINA ---
+        mostrarBotoesPosConsulta();
+    } else {
+        displaySummaryTable();
+        if (economizeBtn) {
+            economizeBtn.addEventListener('click', getEconomyTips);
+        }
+    }
     
-    // Adiciona o evento de clique diretamente na função que chama a API
-    if (economizeBtn) {
-        economizeBtn.addEventListener('click', getEconomyTips);
+    // --- ADICIONA O EVENT LISTENER PARA O BOTÃO REINICIAR ---
+    if (reiniciarBtn) {
+        reiniciarBtn.addEventListener('click', reiniciarSimulacaoCompleta);
     }
 });

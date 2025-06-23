@@ -16,15 +16,39 @@ function salvarResposta() {
   let valorSalvo = "";
   let formIdentificado = false;
 
+  // ===== INÍCIO DA ALTERAÇÃO (BLOCO 1) =====
   // Bloco 1: Pergunta sobre Pessoas
   if (radioGroups.pessoas.length > 0) {
     formIdentificado = true;
-    radioGroups.pessoas.forEach(radio => { if (radio.checked) selecionado = radio.value; });
-    if (selecionado === "") { alert("Selecione uma opção"); return; }
+    let valorFinal = "";
+    radioGroups.pessoas.forEach(radio => {
+      if (radio.checked) {
+        selecionado = radio.value;
+      }
+    });
+
+    if (selecionado === "") {
+      alert("Por favor, selecione uma opção.");
+      return;
+    }
+
+    if (selecionado === "custom") {
+      const customValue = document.getElementById('pessoas_custom_input').value;
+      if (!customValue || parseInt(customValue) < 1) {
+        alert("Por favor, insira um número de pessoas válido.");
+        return;
+      }
+      valorFinal = customValue + (parseInt(customValue) === 1 ? " pessoa" : " pessoas");
+    } else {
+      valorFinal = selecionado;
+    }
+
     variavel = "pergunta1";
-    valorSalvo = "Vivem " + selecionado;
+    valorSalvo = "Vivem " + valorFinal;
     proximaPagina = "02Pergunta.html";
   }
+  // ===== FIM DA ALTERAÇÃO (BLOCO 1) =====
+
   // Bloco 2: Pergunta sobre Imóvel
   else if (radioGroups.imovel.length > 0) {
     formIdentificado = true;
@@ -68,7 +92,6 @@ function salvarResposta() {
     if (selecionado === "") { alert("Selecione uma opção"); return; }
     variavel = "pergunta6";
     valorSalvo = "Tipo de medidor: " + selecionado;
-    // ===== CORREÇÃO APLICADA AQUI =====
     proximaPagina = "resumo.html"; 
   }
   // Bloco 7: Pergunta a Definir
@@ -81,7 +104,6 @@ function salvarResposta() {
     proximaPagina = "resumo.html";
   }
 
-  // Se nenhum formulário foi encontrado, encerra a função
   if (!formIdentificado) {
     console.error("Nenhum grupo de rádio conhecido encontrado na página atual.");
     return;
@@ -98,47 +120,68 @@ function confirmarVolta() {
   }
 }
 
-// Função executada ao carregar a página
 window.onload = function () {
-  // Executa apenas se estiver na página de resumo
   if (window.location.pathname.includes("resumo.html")) {
     const container = document.getElementById("resumoRespostas");
 
-    // Mapeamento completo de ícones para todas as perguntas
+    // ===== INÍCIO DA ALTERAÇÃO (ÍCONES) =====
+    // O valor "5+ pessoas" foi removido pois a nova opção editável o substitui.
     const icones = {
-      pergunta1: { "1 a 2 pessoas": "bi-people", "3 pessoas": "bi-people-fill", "4 pessoas": "bi-people-fill", "5+ pessoas": "bi-people-fill" },
-      pergunta2: { "Unidade Habitacional": "bi-building", "Casa": "bi-house", "Loja": "bi-shop" },
-      pergunta3: { "Inferior a 5 anos": "bi-lightning-charge", "5 a 10 anos": "bi-lightning", "10 a 15 anos": "bi-exclamation-triangle" },
-      pergunta4: { "menos de 1500": "bi-wallet", "1500 a 2500 R$": "bi-wallet2", "2500 a 3500 R$": "bi-piggy-bank", "3500 a 4500 R$": "bi-cash-coin", "Mais de 5000 R$": "bi-graph-up-arrow" },
+      pergunta1: { "1 a 2 pessoas": "bi-people", "3 pessoas": "bi-people-fill", "4 pessoas": "bi-people-fill" },
+      pergunta2: { "Apartamento": "bi-building", "Casa": "bi-house" },
+      pergunta3: { "Inferior a 5 anos": "bi-lightning-charge", "5 a 10 anos": "bi-lightning", "10 a 15 anos": "bi-exclamation-triangle", "Não sei": "bi-patch-question-fill" },
+      pergunta4: { "menos de 1500": "bi-wallet", "1500 a 2500 R$": "bi-wallet2", "2500 a 3500 R$": "bi-piggy-bank", "3500 a 4500 R$": "bi-cash-coin", "Mais de 5000 R$": "bi-graph-up-arrow", "acima de 28000": "bi-rocket-takeoff" },
       pergunta5: { "Sim": "bi-patch-check-fill", "Não": "bi-patch-minus-fill", "Não sei": "bi-patch-question-fill" },
       pergunta6: { "Monofásico": "bi-1-circle-fill", "Bifásico": "bi-2-circle-fill", "Trifásico": "bi-3-circle-fill", "não sei informar": "bi-question-circle-fill" },
       pergunta7: { "Opção 1 a definir": "bi-question-circle", "Opção 2 a definir": "bi-question-circle" }
     };
+    // ===== FIM DA ALTERAÇÃO (ÍCONES) =====
 
-    // Objeto com todas as perguntas
     const perguntas = {
       pergunta1: { prefixo: "Vivem ", label: "Moradores" },
-      pergunta2: { prefixo: "Moro em uma ", label: "Tipo de Imóvel" },
-      pergunta3: { prefixo: "Tempo de manutenção: ", label: "Manutenção" },
-      pergunta4: { prefixo: "Renda familiar: ", label: "Renda Familiar" },
+      pergunta2: { prefixo: "Moro em um/a ", label: "Tipo de Imóvel" },
+      pergunta3: { 
+        prefixo: "Tempo de manutenção: ", 
+        label: "Manutenção",
+        mapa: { "Não sei": "Não sei informar" }
+      },
+      pergunta4: { 
+        prefixo: "Renda familiar: ", 
+        label: "Renda Familiar",
+        mapa: {
+          "menos de 1500": "até 1518,00 R$", "1500 a 2500 R$": "1518,00 a 2900,00 R$", "2500 a 3500 R$": "2900,00 a 4500,00 R$", "3500 a 4500 R$": "4500,00 a 7100,00 R$", "Mais de 5000 R$": "7100,00 a 28000,00 R$", "acima de 28000": "acima 28000,00 R$"
+        }
+      },
       pergunta5: { prefixo: "Beneficiário de programa social: ", label: "Programa Social" },
       pergunta6: { prefixo: "Tipo de medidor: ", label: "Medidor" },
-      pergunta7: { prefixo: "Resposta 7: ", label: "Pergunta 7" }
+     
     };
 
-    // Itera sobre todas as perguntas e exibe as que têm resposta
     for (let i = 1; i <= 7; i++) {
       const chavePergunta = "pergunta" + i;
       const textoCompleto = localStorage.getItem(chavePergunta);
 
       if (textoCompleto) {
-        const prefixo = perguntas[chavePergunta].prefixo;
-        const chaveIcone = textoCompleto.replace(prefixo, "");
-        const iconeClasse = icones[chavePergunta][chaveIcone] || 'bi-question-circle';
+        const config = perguntas[chavePergunta];
+        const prefixo = config.prefixo;
+        const chaveValor = textoCompleto.replace(prefixo, "");
+        const textoDisplay = (config.mapa && config.mapa[chaveValor]) ? config.mapa[chaveValor] : chaveValor;
+        
+        let iconeClasse = icones[chavePergunta][chaveValor];
+
+        // ===== INÍCIO DA ALTERAÇÃO (LÓGICA DO RESUMO) =====
+        // Se um ícone não for encontrado para a pergunta 1 (o que acontecerá com valores customizados),
+        // atribui um ícone padrão para pessoas.
+        if (!iconeClasse && chavePergunta === 'pergunta1') {
+          iconeClasse = 'bi-people-fill';
+        }
+        // ===== FIM DA ALTERAÇÃO (LÓGICA DO RESUMO) =====
+
+        iconeClasse = iconeClasse || 'bi-question-circle'; // Fallback final
 
         container.innerHTML += `
           <div class="radio-label">
-            <i class="bi ${iconeClasse} icon-40 me-2"></i> ${textoCompleto}
+            <i class="bi ${iconeClasse} icon-40 me-2"></i> ${prefixo}${textoDisplay}
           </div>
         `;
       }
@@ -146,7 +189,6 @@ window.onload = function () {
   }
 };
 
-// Confirmação final e redirecionamento
 function confirmarEnvio() {
   // alert("Informações confirmadas com sucesso! Obrigado.");
   window.location.href = "../simulador/instrucoes.html";

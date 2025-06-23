@@ -37,11 +37,20 @@
               <input type="radio" name="pessoas" value="4 pessoas" />
               <i class="bi bi-people-fill icon-40"></i> 4 pessoas
             </label>
+            
             <label class="radio-label">
-                <input type="radio" name="pessoas" value="5+ pessoas" />
-                <i class="bi bi-people-fill icon-40"></i> 5+ pessoas
-              </label>
-          </form>
+              <input type="radio" name="pessoas" value="custom" id="pessoas_custom_radio" />
+              <i class="bi bi-pencil-square icon-40"></i>
+              <input 
+                type="number" 
+                id="pessoas_custom_input" 
+                class="form-control-sm" 
+                placeholder="Outro valor..." 
+                style="width: 140px;" 
+                min="5" 
+              />
+            </label>
+            </form>
         </div>
       </div>
 
@@ -54,5 +63,13 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    const customInput = document.getElementById('pessoas_custom_input');
+    if (customInput) {
+      customInput.addEventListener('input', () => {
+        document.getElementById('pessoas_custom_radio').checked = true;
+      });
+    }
+  </script>
 </body>
 </html>

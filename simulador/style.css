@@ -90,7 +90,7 @@ body {
     opacity: 1;
 }
 
-/* Altere o .overlay-content para ser mais um wrapper simples. */
+
 .overlay-content {
     background-color: transparent;
     box-shadow: none;
@@ -98,15 +98,13 @@ body {
     border-radius: 0;
 }
 
-/* O modal-dialog já está bem configurado, mas vamos reforçar a não-compressão */
+
 .modal-dialog {
     max-width: 800px;
     width: 95%;
     margin: 1rem auto;
     flex-shrink: 0;
 }
-
-/* Ajuste o modal-content para controlar a altura máxima e o overflow geral do modal */
 .modal-content {
     border-radius: 0.5rem;
     overflow: hidden;
@@ -157,7 +155,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 25px; /* MANTIDO: Aumentado o espaçamento entre os cards de eletrodomésticos */
+    gap: 25px; 
 }
 
 /* Para o ícone de check */
