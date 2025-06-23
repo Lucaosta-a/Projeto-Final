@@ -94,7 +94,7 @@ function salvarResposta() {
 function confirmarVolta() {
   const confirmar = confirm("Deseja voltar à página principal?");
   if (confirmar) {
-    window.location.href = "../index/index.html";
+    window.location.href = "../index.html";
   }
 }
 

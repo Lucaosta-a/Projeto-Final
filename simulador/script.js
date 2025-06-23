@@ -720,8 +720,7 @@ function confirmarvolta() {
 
     // Se o usuário clicar em "OK", ele será redirecionado.
     if (querVoltar) {
-        // ATENÇÃO: Ajuste o caminho para 'index.html' se necessário, dependendo da sua estrutura de pastas.
-        window.location.href = 'index.html'; 
+        window.location.href = '../index.html'; 
     }
     // Se o usuário clicar em "Cancelar", nada acontece.
 };
