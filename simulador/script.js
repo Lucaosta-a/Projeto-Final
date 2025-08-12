@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortedRoomKeys.forEach(roomKey => {
             let displayName = roomKey;
-            let iconPath = `./assets/icons/${roomKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.svg`;
+            let iconPath = `assets/room/${roomKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.svg`;
             let isCustomRoom = false;
 
             if (roomKey.startsWith('custom-')) {
