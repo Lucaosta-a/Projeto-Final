@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_KEY = 'AIzaSyBBRHEdl_dJP6DlPHni1jTNI4NkfGQ368s'; // Sua chave real da API
+    const API_KEY = 'AIzaSyArLiR-Qr4yCQSAmBEfDMzrp_61h92g4iU'; // Sua chave real da API
     const summaryTableContainer = document.getElementById('summaryTableContainer');
     const economizeBtn = document.getElementById('economizeBtn');
     // --- INÍCIO DA ALTERAÇÃO ---
